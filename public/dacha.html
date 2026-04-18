@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>DachaUz — Dacha</title>
+<meta name="theme-color" content="#1a9e8f">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#1a9e8f;--teal-dark:#157a6e;--teal-light:#e8f7f5;--text:#1a1a2e;--muted:#6b7280;--bg:#f5f7fa;--white:#fff;--border:#e5e7eb;--error:#ef4444}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Nunito',sans-serif;background:var(--bg);padding-bottom:100px}
+.back-btn{position:fixed;top:14px;left:14px;z-index:50;background:white;border:none;border-radius:50%;width:40px;height:40px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 12px rgba(0,0,0,0.15)}
+.gallery{position:relative;height:280px;overflow:hidden;background:#ddd}
+.gallery-imgs{display:flex;height:100%;transition:transform 0.3s}
+.gallery-img{min-width:100%;height:100%;object-fit:cover}
+.gallery-nav{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+.g-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.6);cursor:pointer}
+.g-dot.active{background:white;width:20px;border-radius:3px}
+.fav-btn{position:absolute;top:14px;left:60px;background:white;border:none;border-radius:50%;width:38px;height:38px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+.content{padding:20px 16px}
+.dacha-name{font-size:22px;font-weight:800;color:var(--text);margin-bottom:4px}
+.dacha-loc{font-size:14px;color:var(--muted);margin-bottom:14px}
+.rating-row{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.rating-badge{background:var(--teal);color:white;padding:4px 10px;border-radius:20px;font-size:13px;font-weight:800}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.stat-box{background:white;border-radius:14px;padding:12px;text-align:center;box-shadow:0 1px 8px rgba(0,0,0,0.06)}
+.stat-icon{font-size:22px;margin-bottom:4px}
+.stat-val{font-size:15px;font-weight:800;color:var(--text)}
+.stat-lbl{font-size:11px;color:var(--muted);font-weight:600}
+.section-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:10px}
+.desc-text{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:20px}
+.amenities{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.amenity{background:white;border:1px solid var(--border);border-radius:10px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--text)}
+.price-card{background:white;border-radius:18px;padding:18px;box-shadow:0 2px 16px rgba(0,0,0,0.08);margin-bottom:20px}
+.price-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.price-box{background:var(--teal-light);border-radius:12px;padding:12px;text-align:center}
+.price-lbl{font-size:11px;color:var(--teal);font-weight:700;text-transform:uppercase;margin-bottom:4px}
+.price-amount{font-size:18px;font-weight:800;color:var(--text)}
+.date-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.date-input-wrap{display:flex;flex-direction:column;gap:4px}
+.date-input-wrap label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase}
+.date-input-wrap input{padding:12px;border:1.5px solid var(--border);border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);outline:none;background:white}
+.date-input-wrap input:focus{border-color:var(--teal)}
+.total-box{background:var(--teal-light);border-radius:14px;padding:14px;margin:14px 0;display:flex;justify-content:space-between;align-items:center}
+.total-lbl{font-size:14px;color:var(--teal);font-weight:700}
+.total-amount{font-size:20px;font-weight:800;color:var(--teal)}
+.host-card{background:white;border-radius:16px;padding:16px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 8px rgba(0,0,0,0.06);margin-bottom:20px}
+.host-avatar{width:50px;height:50px;border-radius:50%;background:var(--teal-light);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.host-name{font-size:15px;font-weight:800;color:var(--text)}
+.contact-host-btn{margin-left:auto;background:var(--teal-light);border:none;border-radius:10px;padding:8px 14px;color:var(--teal);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+.bottom-cta{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--border);padding:14px 16px;display:flex;gap:10px;z-index:50}
+.btn-book{flex:1;padding:14px;background:linear-gradient(135deg,var(--teal),var(--teal-dark));color:white;border:none;border-radius:14px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 4px 16px rgba(26,158,143,0.35)}
+.btn-call{width:50px;height:50px;background:var(--teal-light);border:none;border-radius:14px;font-size:22px;cursor:pointer}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-sheet{background:white;border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:24px;max-height:90vh;overflow-y:auto}
+.modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
+.modal-title{font-size:18px;font-weight:800;color:var(--text);margin-bottom:16px}
+.btn-pay{width:100%;padding:15px;background:linear-gradient(135deg,#00adef,#0080bf);color:white;border:none;border-radius:14px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:10px}
+.error-msg{color:var(--error);font-size:13px;font-weight:600;text-align:center;display:none;margin-top:8px}
+.error-msg.show{display:block}
+.loading{display:none;position:fixed;inset:0;background:rgba(255,255,255,0.85);z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+.loading.show{display:flex}
+.spinner{width:44px;height:44px;border:4px solid var(--teal-light);border-top-color:var(--teal);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="loading" id="loading"><div class="spinner"></div><p style="color:var(--teal);font-weight:700">Yuklanmoqda...</p></div>
+<button class="back-btn" onclick="history.back()">←</button>
+<div class="gallery" id="gallery">
+  <div class="gallery-imgs" id="galleryImgs"></div>
+  <div class="gallery-nav" id="galleryNav"></div>
+  <button class="fav-btn" id="favBtn" onclick="toggleFav()">🔖</button>
+</div>
+<div class="content">
+  <div class="dacha-name" id="dachaName">Yuklanmoqda...</div>
+  <div class="dacha-loc" id="dachaLoc"></div>
+  <div class="rating-row"><div class="rating-badge" id="ratingBadge" style="display:none"></div><div id="reviewsTxt"></div></div>
+  <div class="stats-grid" id="statsGrid"></div>
+  <div class="section-title">Tavsif</div>
+  <div class="desc-text" id="descText"></div>
+  <div class="section-title">Qulayliklar</div>
+  <div class="amenities" id="amenities"></div>
+  <div class="section-title">Narxlar</div>
+  <div class="price-card">
+    <div class="price-row">
+      <div class="price-box"><div class="price-lbl">Kunlik narx</div><div class="price-amount" id="priceDay">—</div><div style="font-size:12px;color:var(--muted)">so'm</div></div>
+      <div class="price-box"><div class="price-lbl">Dam olish kuni</div><div class="price-amount" id="priceWeekend">—</div><div style="font-size:12px;color:var(--muted)">so'm</div></div>
+    </div>
+    <div class="section-title" style="font-size:15px">Sana tanlang</div>
+    <div class="date-row" style="margin-bottom:12px">
+      <div class="date-input-wrap"><label>Kelish</label><input type="date" id="dateFrom" onchange="calcTotal()"></div>
+      <div class="date-input-wrap"><label>Ketish</label><input type="date" id="dateTo" onchange="calcTotal()"></div>
+    </div>
+    <div class="total-box" id="totalBox" style="display:none">
+      <div class="total-lbl" id="totalLabel">Jami</div>
+      <div class="total-amount" id="totalAmount">—</div>
+    </div>
+  </div>
+  <div class="section-title">Host haqida</div>
+  <div class="host-card">
+    <div class="host-avatar">👤</div>
+    <div><div class="host-name" id="hostName">—</div></div>
+    <button class="contact-host-btn" onclick="callHost()">📞 Aloqa</button>
+  </div>
+</div>
+<div class="bottom-cta">
+  <button class="btn-call" onclick="callHost()">📞</button>
+  <button class="btn-book" onclick="openBooking()">Band qilish</button>
+</div>
+<div class="modal-overlay" id="bookingModal" onclick="closeModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🏡 Band qilish</div>
+    <div class="date-row">
+      <div class="date-input-wrap"><label>Kelish</label><input type="date" id="m-dateFrom" onchange="calcModalTotal()"></div>
+      <div class="date-input-wrap"><label>Ketish</label><input type="date" id="m-dateTo" onchange="calcModalTotal()"></div>
+    </div>
+    <br>
+    <div class="date-input-wrap"><label>Mehmonlar</label><input type="number" id="m-guests" value="2" min="1" style="padding:12px;border:1.5px solid var(--border);border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;outline:none"></div>
+    <div class="total-box" id="m-totalBox" style="margin-top:14px;display:none">
+      <div class="total-lbl" id="m-totalLabel">Jami</div>
+      <div class="total-amount" id="m-totalAmount">—</div>
+    </div>
+    <p class="error-msg" id="bookError"></p>
+    <button class="btn-pay" onclick="payWithClick()" id="btnPay">To'lash — <span style="background:white;border-radius:6px;padding:2px 8px;font-size:13px;font-weight:900;color:#00adef">CLICK</span></button>
+    <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px">Xavfsiz to'lov Click orqali</p>
+  </div>
+</div>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc,serverTimestamp,collection,deleteDoc}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyCA5bm4Q-dNYKtcXLunK-lKCKqQn_zQDKw",authDomain:"vorislarlugati.firebaseapp.com",projectId:"vorislarlugati",storageBucket:"vorislarlugati.firebasestorage.app",messagingSenderId:"778909193044",appId:"1:778909193044:web:80c005098b81fbec4a2ec1"});
+const auth=getAuth(app);const db=getFirestore(app);
+const params=new URLSearchParams(location.search);const dachaId=params.get('id');
+let dachaData=null;let currentUser=null;let imgIndex=0;let isFav=false;let hostPhone='';
+const demoDachas={
+demo1:{id:'demo1',name:'Abduraxmon Yakkatut #2 Dacha',location:'Toshkent viloyati, Qibray tumani',category:'daryo',rooms:2,beds:9,guests:9,pricePerDay:100000,priceWeekend:1000000,images:['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800','https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800'],rating:4.8,reviews:24,description:"Toshkent viloyatida go'zal tabiat qo'ynida joylashgan dacha.",amenities:['🌊 Daryo yaqinida','🅿️ Parking','☕ Oshxona','🔥 Mangal'],hostName:'Abduraxmon Toshmatov',hostPhone:'+998901234567'},
+demo2:{id:'demo2',name:'Aziz Yakkatut Dachasi',location:"Bo'ka tumani",category:'hovuz',rooms:3,beds:9,guests:12,pricePerDay:2000000,priceWeekend:2200000,images:['https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800'],rating:4.9,reviews:41,description:"Katta hovuzli zamonaviy dacha.",amenities:['🏊 Hovuz','🅿️ Parking','☕ Oshxona','❄️ Konditsioner'],hostName:'Aziz Karimov',hostPhone:'+998901112233'},
+demo3:{id:'demo3',name:'Green Valley Mini Dacha',location:'Chirchiq',category:'mini',rooms:1,beds:4,guests:6,pricePerDay:350000,priceWeekend:500000,images:['https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800'],rating:4.6,reviews:18,description:"Qulay mini dacha.",amenities:['🌊 Daryo yaqinida','🔥 Mangal'],hostName:'Gulsanam Yusupova',hostPhone:'+998907778899'},
+demo4:{id:'demo4',name:'Plyaj Yaqinidagi Dacha',location:"Charvak ko'li",category:'plyaj',rooms:4,beds:12,guests:20,pricePerDay:3000000,priceWeekend:3500000,images:['https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800'],rating:5.0,reviews:67,description:"Charvak ko'li yaqinida lux dacha.",amenities:['🏖️ Plyaj yaqinida','🏊 Hovuz','❄️ Konditsioner','🔥 Mangal'],hostName:'Mirzo Razzaqov',hostPhone:'+998909998877'}
+};
+function formatPrice(p){return Number(p).toLocaleString('uz-UZ')}
+function renderGallery(images){
+const wrap=document.getElementById('galleryImgs');const nav=document.getElementById('galleryNav');
+wrap.innerHTML=images.map(src=>`<img class="gallery-img" src="${src}" alt="">`).join('');
+nav.innerHTML=images.map((_,i)=>`<div class="g-dot ${i===0?'active':''}" onclick="goImg(${i})"></div>`).join('');
+let startX=0;
+wrap.parentElement.addEventListener('touchstart',e=>startX=e.touches[0].clientX);
+wrap.parentElement.addEventListener('touchend',e=>{const diff=startX-e.changedTouches[0].clientX;if(Math.abs(diff)>40)goImg(imgIndex+(diff>0?1:-1))});
+}
+window.goImg=function(i){const imgs=dachaData.images||[];imgIndex=Math.max(0,Math.min(imgs.length-1,i));document.getElementById('galleryImgs').style.transform=`translateX(-${imgIndex*100}%)`;document.querySelectorAll('.g-dot').forEach((d,j)=>d.classList.toggle('active',j===imgIndex))};
+function renderDacha(d){
+dachaData=d;document.title=d.name+' — DachaUz';
+renderGallery(d.images||['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800']);
+document.getElementById('dachaName').textContent=d.name;
+document.getElementById('dachaLoc').textContent='📍 '+d.location;
+if(d.rating){document.getElementById('ratingBadge').textContent='⭐ '+d.rating;document.getElementById('ratingBadge').style.display='inline-block';document.getElementById('reviewsTxt').textContent=d.reviews+' ta sharh'}
+document.getElementById('statsGrid').innerHTML=`<div class="stat-box"><div class="stat-icon">🛏️</div><div class="stat-val">${d.rooms}</div><div class="stat-lbl">Xona</div></div><div class="stat-box"><div class="stat-icon">🛌</div><div class="stat-val">${d.beds}</div><div class="stat-lbl">Yotoq</div></div><div class="stat-box"><div class="stat-icon">👥</div><div class="stat-val">${d.guests}</div><div class="stat-lbl">Kishi</div></div>`;
+document.getElementById('descText').textContent=d.description||'';
+document.getElementById('amenities').innerHTML=(d.amenities||[]).map(a=>`<div class="amenity">${a}</div>`).join('');
+document.getElementById('priceDay').textContent=formatPrice(d.pricePerDay);
+document.getElementById('priceWeekend').textContent=formatPrice(d.priceWeekend);
+document.getElementById('hostName').textContent=d.hostName||'Host';
+if(d.hostPhone)hostPhone=d.hostPhone;
+const today=new Date().toISOString().split('T')[0];
+['dateFrom','dateTo','m-dateFrom','m-dateTo'].forEach(id=>document.getElementById(id).min=today);
+document.getElementById('loading').classList.remove('show');
+}
+function calcDays(from,to,pd,pw){if(!from||!to)return null;const d1=new Date(from),d2=new Date(to);if(d2<=d1)return null;let total=0,days=0;const cur=new Date(d1);while(cur<d2){const day=cur.getDay();total+=(day===5||day===6)?pw:pd;days++;cur.setDate(cur.getDate()+1)}return{total,days}}
+window.calcTotal=function(){if(!dachaData)return;const res=calcDays(document.getElementById('dateFrom').value,document.getElementById('dateTo').value,dachaData.pricePerDay,dachaData.priceWeekend);const box=document.getElementById('totalBox');if(res){box.style.display='flex';document.getElementById('totalLabel').textContent=`Jami (${res.days} kun)`;document.getElementById('totalAmount').textContent=formatPrice(res.total)+" so'm"}else box.style.display='none'};
+window.calcModalTotal=function(){if(!dachaData)return;const res=calcDays(document.getElementById('m-dateFrom').value,document.getElementById('m-dateTo').value,dachaData.pricePerDay,dachaData.priceWeekend);const box=document.getElementById('m-totalBox');if(res){box.style.display='flex';document.getElementById('m-totalLabel').textContent=`Jami (${res.days} kun)`;document.getElementById('m-totalAmount').textContent=formatPrice(res.total)+" so'm";document.getElementById('btnPay').innerHTML=`To'lash ${formatPrice(res.total)} so'm — <span style="background:white;border-radius:6px;padding:2px 8px;font-size:13px;font-weight:900;color:#00adef">CLICK</span>`}else box.style.display='none'};
+window.openBooking=function(){if(!currentUser){window.location.href='index.html';return}const f=document.getElementById('dateFrom').value;const t=document.getElementById('dateTo').value;if(f)document.getElementById('m-dateFrom').value=f;if(t)document.getElementById('m-dateTo').value=t;calcModalTotal();document.getElementById('bookingModal').classList.add('open')};
+window.closeModal=function(e){if(e.target===document.getElementById('bookingModal'))document.getElementById('bookingModal').classList.remove('open')};
+window.payWithClick=async function(){
+const from=document.getElementById('m-dateFrom').value;const to=document.getElementById('m-dateTo').value;
+const errEl=document.getElementById('bookError');
+if(!from||!to){errEl.textContent='Sana tanlang!';errEl.classList.add('show');setTimeout(()=>errEl.classList.remove('show'),3000);return}
+const res=calcDays(from,to,dachaData.pricePerDay,dachaData.priceWeekend);
+if(!res){errEl.textContent='Sanalarni to\'g\'ri kiriting!';errEl.classList.add('show');setTimeout(()=>errEl.classList.remove('show'),3000);return}
+const bookingRef=doc(collection(db,'bookings'));
+await setDoc(bookingRef,{id:bookingRef.id,dachaId,dachaName:dachaData.name,userId:currentUser.uid,userName:currentUser.displayName||'',userEmail:currentUser.email,hostId:dachaData.hostId||'',dateFrom:from,dateTo:to,guests:Number(document.getElementById('m-guests').value),totalAmount:res.total,days:res.days,status:'pending',paymentStatus:'pending',createdAt:serverTimestamp()});
+alert(`✅ Bron saqlandi!\nJami: ${formatPrice(res.total)} so'm\nBron ID: ${bookingRef.id.slice(0,8)}`);
+document.getElementById('bookingModal').classList.remove('open');
+window.location.href='bookings.html';
+};
+window.toggleFav=async function(){if(!currentUser){window.location.href='index.html';return}isFav=!isFav;document.getElementById('favBtn').textContent=isFav?'❤️':'🔖';const ref=doc(db,'favorites',`${currentUser.uid}_${dachaId}`);if(isFav)await setDoc(ref,{userId:currentUser.uid,dachaId,savedAt:serverTimestamp()});else await deleteDoc(ref)};
+window.callHost=function(){if(hostPhone)window.location.href='tel:'+hostPhone;else alert('Telefon raqam qo\'shilmagan')};
+onAuthStateChanged(auth,async(user)=>{
+currentUser=user;
+document.getElementById('loading').classList.add('show');
+try{
+if(dachaId?.startsWith('demo')){renderDacha(demoDachas[dachaId])}
+else{const snap=await getDoc(doc(db,'dachas',dachaId));if(snap.exists())renderDacha({id:snap.id,...snap.data()});else{document.getElementById('loading').classList.remove('show');history.back()}}
+if(user){const favSnap=await getDoc(doc(db,'favorites',`${user.uid}_${dachaId}`));isFav=favSnap.exists();document.getElementById('favBtn').textContent=isFav?'❤️':'🔖'}
+}catch(e){if(demoDachas[dachaId])renderDacha(demoDachas[dachaId]);else document.getElementById('loading').classList.remove('show')}
+});
+</script>
+</body>
+        </html>
