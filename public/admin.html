@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>DachaUz — Admin Panel</title>
+<meta name="theme-color" content="#1a1a2e">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#1a9e8f;--dark:#1a1a2e;--muted:#6b7280;--bg:#f5f7fa;--white:#fff;--border:#e5e7eb;--gold:#f59e0b;--error:#ef4444;--success:#10b981}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Nunito',sans-serif;background:var(--bg);padding-bottom:80px}
+.topbar{background:var(--dark);padding:16px;display:flex;align-items:center;justify-content:space-between}
+.topbar-title{color:white;font-size:18px;font-weight:800}
+.back-btn{background:rgba(255,255,255,0.1);border:none;border-radius:10px;padding:6px 12px;color:white;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+.admin-badge{background:var(--gold);color:#000;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px}
+.content{padding:16px}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
+.stat-card{background:white;border-radius:14px;padding:16px;box-shadow:0 1px 8px rgba(0,0,0,0.06)}
+.stat-num{font-size:26px;font-weight:800}
+.stat-lbl{font-size:11px;color:var(--muted);font-weight:600;margin-top:3px}
+.stat-teal .stat-num{color:var(--teal)}
+.stat-gold .stat-num{color:var(--gold)}
+.stat-dark .stat-num{color:var(--dark)}
+.stat-green .stat-num{color:var(--success)}
+.tab-bar{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:16px}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-pill{flex-shrink:0;padding:8px 16px;border-radius:20px;border:1.5px solid var(--border);background:white;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;color:var(--muted);white-space:nowrap;transition:all 0.2s}
+.tab-pill.active{background:var(--dark);border-color:var(--dark);color:white}
+.user-card{background:white;border-radius:14px;padding:14px;margin-bottom:8px;box-shadow:0 1px 8px rgba(0,0,0,0.06);display:flex;align-items:center;gap:12px}
+.user-avatar{width:46px;height:46px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden}
+.user-avatar img{width:100%;height:100%;object-fit:cover}
+.user-name{font-size:14px;font-weight:800;color:var(--dark)}
+.user-email{font-size:11px;color:var(--muted);margin-top:1px}
+.role-select{margin-left:auto;padding:6px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;outline:none;background:white}
+.dacha-row{background:white;border-radius:14px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 8px rgba(0,0,0,0.06)}
+.dacha-img-sm{width:50px;height:50px;border-radius:10px;object-fit:cover;background:#eee}
+.dacha-nm{font-size:13px;font-weight:800;color:var(--dark)}
+.dacha-lc{font-size:11px;color:var(--muted)}
+.dacha-pr{font-size:12px;color:var(--teal);font-weight:700}
+.toggle-btn{padding:5px 10px;border-radius:8px;border:none;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;cursor:pointer}
+.toggle-active{background:#d1fae5;color:#059669}
+.toggle-inactive{background:#fee2e2;color:#ef4444}
+.booking-row{background:white;border-radius:14px;padding:12px;margin-bottom:8px;box-shadow:0 1px 8px rgba(0,0,0,0.06)}
+.booking-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.booking-title{font-size:13px;font-weight:800;color:var(--dark)}
+.status-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px}
+.st-pending{background:#fef3c7;color:#d97706}
+.st-confirmed{background:#d1fae5;color:#059669}
+.st-cancelled{background:#fee2e2;color:#ef4444}
+.booking-detail{font-size:11px;color:var(--muted);line-height:1.8}
+.booking-amount{font-size:14px;font-weight:800;color:var(--teal);margin-top:6px}
+.empty{text-align:center;padding:32px;color:var(--muted)}
+.loading{display:none;position:fixed;inset:0;background:rgba(255,255,255,0.85);z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+.loading.show{display:flex}
+.spinner{width:44px;height:44px;border:4px solid #e5e7eb;border-top-color:var(--dark);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="loading" id="loading"><div class="spinner"></div><p style="color:var(--dark);font-weight:700">Yuklanmoqda...</p></div>
+<div class="topbar">
+  <button class="back-btn" onclick="window.location.href='home.html'">← Bosh sahifa</button>
+  <div class="topbar-title">⚙️ Admin Panel</div>
+  <div class="admin-badge">ADMIN</div>
+</div>
+<div class="content">
+  <div class="stats-grid">
+    <div class="stat-card stat-teal"><div class="stat-num" id="s-users">—</div><div class="stat-lbl">Foydalanuvchilar</div></div>
+    <div class="stat-card stat-dark"><div class="stat-num" id="s-dachas">—</div><div class="stat-lbl">Dachalar</div></div>
+    <div class="stat-card stat-gold"><div class="stat-num" id="s-bookings">—</div><div class="stat-lbl">Bronlar</div></div>
+    <div class="stat-card stat-green"><div class="stat-num" id="s-income">—</div><div class="stat-lbl">Daromad (M so'm)</div></div>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-pill active" onclick="showTab('users',this)">👤 Foydalanuvchilar</button>
+    <button class="tab-pill" onclick="showTab('dachas',this)">🏡 Dachalar</button>
+    <button class="tab-pill" onclick="showTab('bookings',this)">📅 Bronlar</button>
+  </div>
+  <div id="tab-users"><div id="usersList"></div></div>
+  <div id="tab-dachas" style="display:none"><div id="dachasList"></div></div>
+  <div id="tab-bookings" style="display:none"><div id="bookingsList"></div></div>
+</div>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import{getFirestore,collection,getDocs,doc,getDoc,updateDoc}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyCA5bm4Q-dNYKtcXLunK-lKCKqQn_zQDKw",authDomain:"vorislarlugati.firebaseapp.com",projectId:"vorislarlugati",storageBucket:"vorislarlugati.firebasestorage.app",messagingSenderId:"778909193044",appId:"1:778909193044:web:80c005098b81fbec4a2ec1"});
+const auth=getAuth(app);const db=getFirestore(app);
+window.showTab=function(tab,el){document.querySelectorAll('.tab-pill').forEach(t=>t.classList.remove('active'));el.classList.add('active');['users','dachas','bookings'].forEach(t=>document.getElementById('tab-'+t).style.display=t===tab?'block':'none')};
+window.changeRole=async function(uid,role){await updateDoc(doc(db,'users',uid),{role})};
+window.toggleDacha=async function(id,active){await updateDoc(doc(db,'dachas',id),{active:!active});const btn=document.getElementById('toggle-'+id);btn.textContent=active?'Faollashtirish':"O'chirish";btn.className='toggle-btn '+(active?'toggle-inactive':'toggle-active');btn.onclick=()=>toggleDacha(id,!active)};
+async function loadAll(){
+document.getElementById('loading').classList.add('show');
+try{
+const[userSnap,dachaSnap,bookSnap]=await Promise.all([getDocs(collection(db,'users')),getDocs(collection(db,'dachas')),getDocs(collection(db,'bookings'))]);
+const users=userSnap.docs.map(d=>({id:d.id,...d.data()}));
+const dachas=dachaSnap.docs.map(d=>({id:d.id,...d.data()}));
+const bookings=bookSnap.docs.map(d=>({id:d.id,...d.data()}));
+const income=bookings.filter(b=>b.status==='confirmed'||b.status==='completed').reduce((s,b)=>s+(b.totalAmount||0),0);
+document.getElementById('s-users').textContent=users.length;
+document.getElementById('s-dachas').textContent=dachas.length;
+document.getElementById('s-bookings').textContent=bookings.length;
+document.getElementById('s-income').textContent=(income/1000000).toFixed(1);
+document.getElementById('usersList').innerHTML=users.length?users.map(u=>`<div class="user-card"><div class="user-avatar">${u.photoURL?`<img src="${u.photoURL}">`:'👤'}</div><div style="flex:1;min-width:0"><div class="user-name">${u.name||'—'}</div><div class="user-email">${u.email||''}</div></div><select class="role-select" onchange="changeRole('${u.id}',this.value)"><option value="mijoz" ${u.role==='mijoz'?'selected':''}>Mijoz</option><option value="host" ${u.role==='host'?'selected':''}>Host</option><option value="admin" ${u.role==='admin'?'selected':''}>Admin</option></select></div>`).join(''):'<div class="empty">Foydalanuvchilar yo\'q</div>';
+document.getElementById('dachasList').innerHTML=dachas.length?dachas.map(d=>`<div class="dacha-row"><img class="dacha-img-sm" src="${d.images?.[0]||'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=100'}" alt=""><div style="flex:1;min-width:0"><div class="dacha-nm">${d.name}</div><div class="dacha-lc">📍 ${d.location}</div><div class="dacha-pr">${Number(d.pricePerDay||0).toLocaleString('uz-UZ')} so'm/kun</div></div><button id="toggle-${d.id}" class="toggle-btn ${d.active===false?'toggle-inactive':'toggle-active'}" onclick="toggleDacha('${d.id}',${d.active!==false})">${d.active===false?'Faollashtirish':"O'chirish"}</button></div>`).join(''):'<div class="empty">Dachalar yo\'q</div>';
+const stMap={pending:'st-pending',confirmed:'st-confirmed',cancelled:'st-cancelled',completed:'st-confirmed'};
+const stTxt={pending:'Kutilmoqda',confirmed:'Tasdiqlangan',cancelled:'Bekor qilindi',completed:'Tugallandi'};
+document.getElementById('bookingsList').innerHTML=bookings.length?bookings.map(b=>`<div class="booking-row"><div class="booking-head"><div class="booking-title">${b.dachaName||'Dacha'}</div><span class="status-badge ${stMap[b.status]||'st-pending'}">${stTxt[b.status]||b.status}</span></div><div class="booking-detail">👤 ${b.userName||b.userEmail||'—'}<br>📅 ${b.dateFrom} → ${b.dateTo}<br>👥 ${b.guests||'—'} kishi • ${b.days||'—'} kun</div><div class="booking-amount">${Number(b.totalAmount||0).toLocaleString('uz-UZ')} so'm</div></div>`).join(''):'<div class="empty">Bronlar yo\'q</div>';
+}catch(e){console.error(e);alert('Xatolik: '+e.message)}
+document.getElementById('loading').classList.remove('show');
+}
+onAuthStateChanged(auth,async(user)=>{if(!user){window.location.href='index.html';return}const snap=await getDoc(doc(db,'users',user.uid));if(!snap.exists()||snap.data().role!=='admin'){window.location.href='home.html';return}await loadAll()});
+</script>
+</body>
+</html>
