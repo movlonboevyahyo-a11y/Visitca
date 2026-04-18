@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>DachaUz — Host Paneli</title>
+<meta name="theme-color" content="#1a9e8f">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#1a9e8f;--teal-dark:#157a6e;--teal-light:#e8f7f5;--text:#1a1a2e;--muted:#6b7280;--bg:#f5f7fa;--white:#fff;--border:#e5e7eb;--error:#ef4444}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Nunito',sans-serif;background:var(--bg);padding-bottom:100px}
+.topbar{background:var(--teal);padding:16px;display:flex;align-items:center;justify-content:space-between}
+.topbar-title{color:white;font-size:18px;font-weight:800}
+.back-btn{background:rgba(255,255,255,0.2);border:none;border-radius:10px;padding:6px 12px;color:white;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+.content{padding:16px}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.stat-card{background:white;border-radius:14px;padding:16px;box-shadow:0 1px 8px rgba(0,0,0,0.06);text-align:center}
+.stat-num{font-size:28px;font-weight:800;color:var(--teal)}
+.stat-lbl{font-size:12px;color:var(--muted);font-weight:600;margin-top:4px}
+.section-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.btn-add{background:var(--teal);border:none;border-radius:10px;padding:8px 14px;color:white;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+.dacha-item{background:white;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 1px 8px rgba(0,0,0,0.06);display:flex;gap:12px;align-items:center}
+.dacha-item-img{width:64px;height:64px;border-radius:10px;object-fit:cover;background:#eee;flex-shrink:0}
+.dacha-item-name{font-size:14px;font-weight:800;color:var(--text)}
+.dacha-item-loc{font-size:12px;color:var(--muted);margin-top:2px}
+.dacha-item-price{font-size:13px;font-weight:700;color:var(--teal);margin-top:4px}
+.dacha-actions{margin-left:auto;display:flex;flex-direction:column;gap:6px}
+.btn-edit{background:var(--teal-light);border:none;border-radius:8px;padding:5px 12px;color:var(--teal);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer}
+.btn-del{background:#fee2e2;border:none;border-radius:8px;padding:5px 12px;color:#ef4444;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer}
+.booking-req{background:white;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 1px 8px rgba(0,0,0,0.06)}
+.req-header{font-size:14px;font-weight:800;color:var(--text);margin-bottom:6px}
+.req-info{font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.8}
+.req-actions{display:flex;gap:8px}
+.btn-confirm{flex:1;background:var(--teal);color:white;border:none;border-radius:10px;padding:10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+.btn-reject{flex:1;background:#fee2e2;color:#ef4444;border:none;border-radius:10px;padding:10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 0}
+.modal-overlay.open{display:flex}
+.modal-sheet{background:white;border-radius:24px;width:95%;max-width:480px;padding:24px;margin:auto}
+.modal-title{font-size:18px;font-weight:800;color:var(--text);margin-bottom:20px}
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.form-group label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase}
+.form-group input,.form-group textarea,.form-group select{padding:12px;border:1.5px solid var(--border);border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);outline:none;background:white}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--teal)}
+.form-group textarea{min-height:80px;resize:vertical}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,var(--teal),var(--teal-dark));color:white;border:none;border-radius:14px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;margin-top:8px}
+.btn-secondary{width:100%;padding:12px;background:none;border:1.5px solid var(--border);border-radius:14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:6px;color:var(--muted)}
+.amenity-grid{display:flex;flex-wrap:wrap;gap:6px}
+.amenity-check{padding:6px 12px;border:1.5px solid var(--border);border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;user-select:none}
+.amenity-check.selected{background:var(--teal);border-color:var(--teal);color:white}
+.loading{display:none;position:fixed;inset:0;background:rgba(255,255,255,0.85);z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+.loading.show{display:flex}
+.spinner{width:44px;height:44px;border:4px solid var(--teal-light);border-top-color:var(--teal);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:32px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="loading" id="loading"><div class="spinner"></div><p style="color:var(--teal);font-weight:700">Yuklanmoqda...</p></div>
+<div class="topbar">
+  <button class="back-btn" onclick="window.location.href='home.html'">← Bosh sahifa</button>
+  <div class="topbar-title">🏡 Host Paneli</div>
+  <div style="width:80px"></div>
+</div>
+<div class="content">
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num" id="statDachas">0</div><div class="stat-lbl">Dachalarim</div></div>
+    <div class="stat-card"><div class="stat-num" id="statBookings">0</div><div class="stat-lbl">Bronlar</div></div>
+    <div class="stat-card"><div class="stat-num" id="statPending">0</div><div class="stat-lbl">Kutilmoqda</div></div>
+    <div class="stat-card"><div class="stat-num" id="statIncome">0</div><div class="stat-lbl">Daromad (M)</div></div>
+  </div>
+  <div class="section-title">📬 Yangi so'rovlar</div>
+  <div id="requestsList"></div>
+  <div class="section-title">Dachalarim<button class="btn-add" onclick="openAddModal()">+ Qo'shish</button></div>
+  <div id="dachaList"></div>
+</div>
+<div class="modal-overlay" id="addModal">
+  <div class="modal-sheet">
+    <div class="modal-title" id="modalTitle">🏡 Dacha qo'shish</div>
+    <div class="form-group"><label>Dacha nomi *</label><input type="text" id="f-name" placeholder="Dacha nomi"></div>
+    <div class="form-group"><label>Manzil *</label><input type="text" id="f-location" placeholder="Viloyat, tuman"></div>
+    <div class="form-group"><label>Kategoriya</label>
+      <select id="f-category">
+        <option value="barchasi">Barchasi</option>
+        <option value="plyaj">🏖️ Plyaj yaqinida</option>
+        <option value="daryo">🌊 Daryo bo'yida</option>
+        <option value="mini">🏠 Mini dacha</option>
+        <option value="hovuz">🏊 Hovuzli</option>
+        <option value="tog">⛰️ Tog'li</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Xona soni</label><input type="number" id="f-rooms" value="2" min="1"></div>
+      <div class="form-group"><label>Yotoq joylari</label><input type="number" id="f-beds" value="6" min="1"></div>
+    </div>
+    <div class="form-group"><label>Maksimal mehmonlar</label><input type="number" id="f-guests" value="10" min="1"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Kunlik narx (so'm)</label><input type="number" id="f-priceDay" placeholder="500000"></div>
+      <div class="form-group"><label>Dam olish kuni</label><input type="number" id="f-priceWeekend" placeholder="800000"></div>
+    </div>
+    <div class="form-group"><label>Telefon</label><input type="tel" id="f-phone" placeholder="+998 90 000 00 00"></div>
+    <div class="form-group"><label>Tavsif</label><textarea id="f-desc" placeholder="Dacha haqida..."></textarea></div>
+    <div class="form-group"><label>Qulayliklar</label><div class="amenity-grid" id="amenityGrid"></div></div>
+    <div class="form-group"><label>Rasm URL</label><input type="url" id="f-img" placeholder="https://..."></div>
+    <button class="btn-primary" onclick="saveDacha()">✅ Saqlash</button>
+    <button class="btn-secondary" onclick="document.getElementById('addModal').classList.remove('open')">Bekor qilish</button>
+  </div>
+</div>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import{getFirestore,collection,query,where,getDocs,doc,setDoc,deleteDoc,updateDoc,serverTimestamp,getDoc}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyCA5bm4Q-dNYKtcXLunK-lKCKqQn_zQDKw",authDomain:"vorislarlugati.firebaseapp.com",projectId:"vorislarlugati",storageBucket:"vorislarlugati.firebasestorage.app",messagingSenderId:"778909193044",appId:"1:778909193044:web:80c005098b81fbec4a2ec1"});
+const auth=getAuth(app);const db=getFirestore(app);
+let currentUser=null;let myDachas=[];let editId=null;let selectedAmenities=new Set();
+const ALL_AMENITIES=['🌊 Daryo yaqinida','🏖️ Plyaj yaqinida','🏊 Hovuz','🅿️ Parking','☕ Oshxona','📺 TV','❄️ Konditsioner','🔥 Mangal','🛝 Bolalar maydoni','💡 Elektr','🌳 Hovli'];
+function renderAmenities(){document.getElementById('amenityGrid').innerHTML=ALL_AMENITIES.map(a=>`<div class="amenity-check ${selectedAmenities.has(a)?'selected':''}" onclick="toggleAmenity('${a}',this)">${a}</div>`).join('')}
+window.toggleAmenity=function(a,el){if(selectedAmenities.has(a)){selectedAmenities.delete(a);el.classList.remove('selected')}else{selectedAmenities.add(a);el.classList.add('selected')}};
+function formatPrice(p){return(Number(p)/1000000).toFixed(1)+'M so\'m'}
+function renderDachas(list){const el=document.getElementById('dachaList');if(!list.length){el.innerHTML='<div class="empty">Hali dacha qo\'shilmagan</div>';return}el.innerHTML=list.map(d=>`<div class="dacha-item"><img class="dacha-item-img" src="${d.images?.[0]||'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200'}" alt=""><div style="flex:1;min-width:0"><div class="dacha-item-name">${d.name}</div><div class="dacha-item-loc">📍 ${d.location}</div><div class="dacha-item-price">${Number(d.pricePerDay||0).toLocaleString('uz-UZ')} so'm/kun</div></div><div class="dacha-actions"><button class="btn-edit" onclick="editDacha('${d.id}')">✏️</button><button class="btn-del" onclick="deleteDacha('${d.id}')">🗑️</button></div></div>`).join('')}
+function renderRequests(list){const el=document.getElementById('requestsList');const pending=list.filter(b=>b.status==='pending');if(!pending.length){el.innerHTML='<div class="empty">Yangi so\'rovlar yo\'q</div>';return}el.innerHTML=pending.map(b=>`<div class="booking-req"><div class="req-header">📍 ${b.dachaName}</div><div class="req-info">👤 ${b.userName||b.userEmail}<br>📅 ${b.dateFrom} → ${b.dateTo} (${b.days} kun)<br>👥 ${b.guests} kishi<br>💰 ${Number(b.totalAmount||0).toLocaleString('uz-UZ')} so'm</div><div class="req-actions"><button class="btn-confirm" onclick="confirmBooking('${b.id}')">✅ Qabul</button><button class="btn-reject" onclick="rejectBooking('${b.id}')">❌ Rad</button></div></div>`).join('')}
+window.openAddModal=function(){editId=null;selectedAmenities=new Set();document.getElementById('modalTitle').textContent="🏡 Dacha qo'shish";['name','location','phone','desc','img'].forEach(f=>document.getElementById('f-'+f).value='');document.getElementById('f-rooms').value=2;document.getElementById('f-beds').value=6;document.getElementById('f-guests').value=10;document.getElementById('f-priceDay').value='';document.getElementById('f-priceWeekend').value='';renderAmenities();document.getElementById('addModal').classList.add('open')};
+window.editDacha=function(id){const d=myDachas.find(x=>x.id===id);if(!d)return;editId=id;selectedAmenities=new Set(d.amenities||[]);document.getElementById('modalTitle').textContent='✏️ Dachani tahrirlash';document.getElementById('f-name').value=d.name||'';document.getElementById('f-location').value=d.location||'';document.getElementById('f-category').value=d.category||'barchasi';document.getElementById('f-rooms').value=d.rooms||2;document.getElementById('f-beds').value=d.beds||6;document.getElementById('f-guests').value=d.guests||10;document.getElementById('f-priceDay').value=d.pricePerDay||'';document.getElementById('f-priceWeekend').value=d.priceWeekend||'';document.getElementById('f-phone').value=d.hostPhone||'';document.getElementById('f-desc').value=d.description||'';document.getElementById('f-img').value=d.images?.[0]||'';renderAmenities();document.getElementById('addModal').classList.add('open')};
+window.saveDacha=async function(){const name=document.getElementById('f-name').value.trim();const location=document.getElementById('f-location').value.trim();if(!name||!location){alert('Ism va manzil majburiy!');return}document.getElementById('loading').classList.add('show');const imgUrl=document.getElementById('f-img').value.trim();const data={name,location,category:document.getElementById('f-category').value,rooms:Number(document.getElementById('f-rooms').value),beds:Number(document.getElementById('f-beds').value),guests:Number(document.getElementById('f-guests').value),pricePerDay:Number(document.getElementById('f-priceDay').value)||0,priceWeekend:Number(document.getElementById('f-priceWeekend').value)||0,hostPhone:document.getElementById('f-phone').value.trim(),description:document.getElementById('f-desc').value.trim(),amenities:[...selectedAmenities],images:imgUrl?[imgUrl]:[],hostId:currentUser.uid,hostName:currentUser.displayName||'',updatedAt:serverTimestamp()};try{if(editId){await updateDoc(doc(db,'dachas',editId),data)}else{const ref=doc(collection(db,'dachas'));await setDoc(ref,{...data,createdAt:serverTimestamp(),rating:0,reviews:0})}document.getElementById('addModal').classList.remove('open');await loadData()}catch(e){alert('Xatolik: '+e.message)}document.getElementById('loading').classList.remove('show')};
+window.deleteDacha=async function(id){if(!confirm("Dachani o'chirasizmi?"))return;document.getElementById('loading').classList.add('show');await deleteDoc(doc(db,'dachas',id));await loadData();document.getElementById('loading').classList.remove('show')};
+window.confirmBooking=async function(id){await updateDoc(doc(db,'bookings',id),{status:'confirmed'});await loadData()};
+window.rejectBooking=async function(id){await updateDoc(doc(db,'bookings',id),{status:'cancelled'});await loadData()};
+async function loadData(){document.getElementById('loading').classList.add('show');try{const dachaSnap=await getDocs(query(collection(db,'dachas'),where('hostId','==',currentUser.uid)));myDachas=dachaSnap.docs.map(d=>({id:d.id,...d.data()}));const bookSnap=await getDocs(query(collection(db,'bookings'),where('hostId','==',currentUser.uid)));const bookings=bookSnap.docs.map(d=>({id:d.id,...d.data()}));document.getElementById('statDachas').textContent=myDachas.length;document.getElementById('statBookings').textContent=bookings.length;document.getElementById('statPending').textContent=bookings.filter(b=>b.status==='pending').length;const income=bookings.filter(b=>b.status==='confirmed'||b.status==='completed').reduce((s,b)=>s+(b.totalAmount||0),0);document.getElementById('statIncome').textContent=(income/1000000).toFixed(1)+'M';renderDachas(myDachas);renderRequests(bookings)}catch(e){console.error(e)}document.getElementById('loading').classList.remove('show')}
+onAuthStateChanged(auth,async(user)=>{if(!user){window.location.href='index.html';return}currentUser=user;const snap=await getDoc(doc(db,'users',user.uid));const role=snap.exists()?snap.data().role:'mijoz';if(role!=='host'&&role!=='admin'){window.location.href='home.html';return}await loadData()});
+</script>
+</body>
+</html>
