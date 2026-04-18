@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>DachaUz — Bosh sahifa</title>
+<meta name="theme-color" content="#1a9e8f">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#1a9e8f;--teal-dark:#157a6e;--teal-light:#e8f7f5;--text:#1a1a2e;--muted:#6b7280;--bg:#f5f7fa;--white:#ffffff;--border:#e5e7eb;--card-shadow:0 2px 16px rgba(0,0,0,0.08)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;padding-bottom:80px}
+.topbar{background:var(--teal);padding:14px 16px 60px;position:relative}
+.topbar-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.app-logo{color:white;font-size:22px;font-weight:800}
+.app-logo span{opacity:0.75}
+.avatar-btn{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.2);border:none;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;color:white}
+.search-bar{display:flex;align-items:center;gap:10px;background:white;border-radius:14px;padding:12px 14px;box-shadow:0 2px 12px rgba(0,0,0,0.1)}
+.search-bar input{flex:1;border:none;outline:none;font-family:'Nunito',sans-serif;font-size:15px;color:#1a1a2e;background:transparent}
+.search-bar input::placeholder{color:#6b7280}
+.banner-wrap{padding:0 16px;margin-top:-44px;margin-bottom:16px}
+.banners{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.banners::-webkit-scrollbar{display:none}
+.banner{min-width:280px;border-radius:16px;overflow:hidden;position:relative;height:140px;flex-shrink:0}
+.banner-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:20px}
+.banner-tag{background:rgba(255,255,255,0.2);color:white;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:6px;width:fit-content;text-transform:uppercase;letter-spacing:0.5px}
+.banner-title{color:white;font-size:20px;font-weight:800;line-height:1.2}
+.banner-sub{color:rgba(255,255,255,0.8);font-size:13px;margin-top:4px}
+.section{padding:0 16px;margin-bottom:16px}
+.section-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:12px}
+.cats{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
+.cat-btn{flex-shrink:0;padding:8px 16px;border-radius:20px;border:1.5px solid var(--border);background:white;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;color:var(--muted);white-space:nowrap}
+.cat-btn.active{background:var(--teal);border-color:var(--teal);color:white}
+.dachas{display:flex;flex-direction:column;gap:16px}
+.dacha-card{background:white;border-radius:18px;overflow:hidden;box-shadow:var(--card-shadow);cursor:pointer;transition:transform 0.2s}
+.dacha-card:active{transform:scale(0.98)}
+.dacha-img-wrap{position:relative;height:200px;overflow:hidden}
+.dacha-img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s}
+.bookmark-btn{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;background:white;border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+.dacha-info{padding:14px 16px 16px}
+.dacha-name{font-size:16px;font-weight:800;color:var(--text);margin-bottom:3px}
+.dacha-loc{font-size:13px;color:var(--muted);margin-bottom:10px}
+.dacha-stats{display:flex;gap:14px;margin-bottom:12px}
+.stat{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--muted);font-weight:600}
+.dacha-prices{display:grid;grid-template-columns:1fr 1fr;gap:8px;border-top:1px solid var(--border);padding-top:12px}
+.price-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.3px}
+.price-val{font-size:16px;font-weight:800;color:var(--text);margin-top:2px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--border);display:flex;z-index:50}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 4px;cursor:pointer;border:none;background:none;font-family:'Nunito',sans-serif;transition:all 0.2s;text-decoration:none;color:var(--muted)}
+.nav-icon{font-size:22px;margin-bottom:3px}
+.nav-label{font-size:10px;font-weight:700}
+.nav-item.active{color:var(--teal)}
+.skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px}
+@keyframes shimmer{to{background-position:-200% 0}}
+.skel-card{height:300px;border-radius:18px;margin-bottom:16px}
+.empty{text-align:center;padding:48px 24px;color:var(--muted)}
+.empty-icon{font-size:56px;margin-bottom:12px}
+.empty-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:6px}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--text);color:white;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;z-index:200;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-sheet{background:white;border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:24px;animation:slideUp 0.3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
+.profile-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.profile-avatar{width:56px;height:56px;border-radius:50%;background:var(--teal-light);display:flex;align-items:center;justify-content:center;font-size:26px;overflow:hidden}
+.profile-avatar img{width:100%;height:100%;object-fit:cover}
+.profile-name{font-size:18px;font-weight:800;color:var(--text)}
+.profile-role{font-size:13px;color:var(--muted);font-weight:600}
+.menu-item{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;text-decoration:none;color:var(--text)}
+.menu-item:last-child{border-bottom:none}
+.menu-icon{font-size:22px;width:36px;text-align:center}
+.menu-text{flex:1;font-size:15px;font-weight:700}
+.menu-arrow{color:var(--muted);font-size:14px}
+.btn-logout{width:100%;padding:14px;margin-top:8px;background:none;border:1.5px solid #ef4444;border-radius:14px;color:#ef4444;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-row">
+    <div class="app-logo">Dacha<span>Uz</span></div>
+    <button class="avatar-btn" onclick="openProfile()" id="avatarBtn">👤</button>
+  </div>
+  <div class="search-bar">
+    <span>🔍</span>
+    <input type="text" id="searchInput" placeholder="Dacha qidirish..." oninput="filterDachas()">
+    <button style="background:none;border:none;font-size:20px;cursor:pointer">⚙️</button>
+  </div>
+</div>
+<div class="banner-wrap">
+  <div class="banners">
+    <div class="banner" style="background:linear-gradient(135deg,#1a9e8f,#0d6b60)">
+      <div class="banner-overlay" style="background:none;padding:20px">
+        <div class="banner-tag">🔥 Maxsus taklif</div>
+        <div class="banner-title">Yozgi dam olish</div>
+        <div class="banner-sub">30% gacha chegirma</div>
+      </div>
+    </div>
+    <div class="banner" style="background:linear-gradient(135deg,#f59e0b,#d97706)">
+      <div class="banner-overlay" style="background:none;padding:20px">
+        <div class="banner-tag">⭐ Top dachalar</div>
+        <div class="banner-title">Plyaj yaqinida</div>
+        <div class="banner-sub">Toshkent viloyati</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="section">
+  <div class="cats" id="cats">
+    <button class="cat-btn active" onclick="filterCat('barchasi',this)">Barchasi</button>
+    <button class="cat-btn" onclick="filterCat('plyaj',this)">🏖️ Plyaj yaqinida</button>
+    <button class="cat-btn" onclick="filterCat('daryo',this)">🌊 Daryo bo'yida</button>
+    <button class="cat-btn" onclick="filterCat('mini',this)">🏠 Mini dacha</button>
+    <button class="cat-btn" onclick="filterCat('hovuz',this)">🏊 Hovuzli</button>
+    <button class="cat-btn" onclick="filterCat('tog',this)">⛰️ Tog'li</button>
+  </div>
+</div>
+<div class="section">
+  <div class="section-title">Dachalar</div>
+  <div id="dachaList"></div>
+</div>
+<nav class="bottom-nav">
+  <a class="nav-item active" href="home.html"><span class="nav-icon">🔍</span><span class="nav-label">Qidirish</span></a>
+  <a class="nav-item" href="bookings.html"><span class="nav-icon">📅</span><span class="nav-label">Band qilinganlar</span></a>
+  <a class="nav-item" href="favorites.html"><span class="nav-icon">❤️</span><span class="nav-label">Sevimlilar</span></a>
+  <a class="nav-item" href="#" onclick="openProfile();return false"><span class="nav-icon">👤</span><span class="nav-label">Profil</span></a>
+</nav>
+<div class="modal-overlay" id="profileModal" onclick="closeProfileModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="profile-header">
+      <div class="profile-avatar" id="profileAvatar">👤</div>
+      <div><div class="profile-name" id="profileName">—</div><div class="profile-role" id="profileRole">—</div></div>
+    </div>
+    <a class="menu-item" href="bookings.html"><span class="menu-icon">📅</span><span class="menu-text">Band qilinganlar</span><span class="menu-arrow">›</span></a>
+    <a class="menu-item" href="favorites.html"><span class="menu-icon">❤️</span><span class="menu-text">Sevimlilar</span><span class="menu-arrow">›</span></a>
+    <a class="menu-item" href="host.html" id="hostMenuLink" style="display:none"><span class="menu-icon">🏡</span><span class="menu-text">Host paneli</span><span class="menu-arrow">›</span></a>
+    <a class="menu-item" href="admin.html" id="adminMenuLink" style="display:none"><span class="menu-icon">⚙️</span><span class="menu-text">Admin panel</span><span class="menu-arrow">›</span></a>
+    <button class="btn-logout" onclick="logout()">Chiqish</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getAuth,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import{getFirestore,collection,getDocs,doc,getDoc,setDoc,deleteDoc,serverTimestamp,query,where}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyCA5bm4Q-dNYKtcXLunK-lKCKqQn_zQDKw",authDomain:"vorislarlugati.firebaseapp.com",projectId:"vorislarlugati",storageBucket:"vorislarlugati.firebasestorage.app",messagingSenderId:"778909193044",appId:"1:778909193044:web:80c005098b81fbec4a2ec1"});
+const auth=getAuth(app);const db=getFirestore(app);
+let currentUser=null;let allDachas=[];let favorites=new Set();let currentCat='barchasi';
+const demoDachas=[
+{id:'demo1',name:'Abduraxmon Yakkatut #2 Dacha',location:'Toshkent viloyati, Qibray tumani',category:'daryo',rooms:2,beds:9,guests:9,pricePerDay:100000,priceWeekend:1000000,images:['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400'],rating:4.8,reviews:24},
+{id:'demo2',name:'Aziz Yakkatut Dachasi',location:"Bo'ka tumani",category:'hovuz',rooms:3,beds:9,guests:12,pricePerDay:2000000,priceWeekend:2200000,images:['https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400'],rating:4.9,reviews:41},
+{id:'demo3',name:'Green Valley Mini Dacha',location:'Chirchiq, Toshkent viloyati',category:'mini',rooms:1,beds:4,guests:6,pricePerDay:350000,priceWeekend:500000,images:['https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400'],rating:4.6,reviews:18},
+{id:'demo4',name:'Plyaj Yaqinidagi Dacha',location:"Charvak ko'li",category:'plyaj',rooms:4,beds:12,guests:20,pricePerDay:3000000,priceWeekend:3500000,images:['https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400'],rating:5.0,reviews:67}
+];
+function formatPrice(p){return Number(p).toLocaleString('uz-UZ')+" so'm"}
+function renderDachas(list){
+const el=document.getElementById('dachaList');
+if(!list.length){el.innerHTML='<div class="empty"><div class="empty-icon">🏡</div><div class="empty-title">Dacha topilmadi</div></div>';return}
+el.innerHTML=list.map(d=>`<div class="dacha-card" onclick="openDacha('${d.id}')"><div class="dacha-img-wrap"><img class="dacha-img" src="${d.images?.[0]||'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400'}" loading="lazy"><button class="bookmark-btn" onclick="toggleFav(event,'${d.id}')">${favorites.has(d.id)?'❤️':'🔖'}</button></div><div class="dacha-info"><div class="dacha-name">${d.name}</div><div class="dacha-loc">📍 ${d.location}</div><div class="dacha-stats"><div class="stat">🛏️ ${d.rooms} xona</div><div class="stat">👥 ${d.guests} kishi</div>${d.rating?`<div class="stat">⭐ ${d.rating}</div>`:''}</div><div class="dacha-prices"><div><div class="price-label">Kunlik narx</div><div class="price-val">${formatPrice(d.pricePerDay)}</div></div><div><div class="price-label">Dam olish kuni</div><div class="price-val">${formatPrice(d.priceWeekend)}</div></div></div></div></div>`).join('')}
+window.filterCat=function(cat,el){currentCat=cat;document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');applyFilters()};
+window.filterDachas=function(){applyFilters()};
+function applyFilters(){const search=document.getElementById('searchInput').value.toLowerCase();let list=allDachas;if(currentCat!=='barchasi')list=list.filter(d=>d.category===currentCat);if(search)list=list.filter(d=>d.name.toLowerCase().includes(search)||d.location.toLowerCase().includes(search));renderDachas(list)}
+window.toggleFav=async function(e,id){e.stopPropagation();if(!currentUser)return showToast('Sevimlilar uchun kiring!');if(favorites.has(id)){favorites.delete(id);await deleteDoc(doc(db,'favorites',`${currentUser.uid}_${id}`));showToast('Sevimlilardan olib tashlandi')}else{favorites.add(id);await setDoc(doc(db,'favorites',`${currentUser.uid}_${id}`),{userId:currentUser.uid,dachaId:id,savedAt:serverTimestamp()});showToast("❤️ Sevimlilarga qo'shildi")}applyFilters()};
+window.openDacha=function(id){window.location.href=`dacha.html?id=${id}`};
+window.openProfile=function(){document.getElementById('profileModal').classList.add('open')};
+window.closeProfileModal=function(e){if(e.target===document.getElementById('profileModal'))document.getElementById('profileModal').classList.remove('open')};
+window.logout=async function(){await signOut(auth);window.location.href='index.html'};
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+async function loadDachas(){document.getElementById('dachaList').innerHTML='<div class="skeleton skel-card"></div><div class="skeleton skel-card"></div>';try{const snap=await getDocs(collection(db,'dachas'));allDachas=snap.empty?demoDachas:snap.docs.map(d=>({id:d.id,...d.data()}))}catch(e){allDachas=demoDachas}applyFilters()}
+async function loadFavorites(uid){try{const snap=await getDocs(query(collection(db,'favorites'),where('userId','==',uid)));snap.forEach(d=>favorites.add(d.data().dachaId))}catch(e){}}
+onAuthStateChanged(auth,async(user)=>{
+if(!user){window.location.href='index.html';return}
+currentUser=user;
+try{const usnap=await getDoc(doc(db,'users',user.uid));const ud=usnap.exists()?usnap.data():{};
+document.getElementById('profileName').textContent=ud.name||user.displayName||'Foydalanuvchi';
+document.getElementById('profileRole').textContent=ud.role==='host'?'🏡 Host':ud.role==='admin'?'⚙️ Admin':'👤 Mijoz';
+if(user.photoURL)document.getElementById('profileAvatar').innerHTML=`<img src="${user.photoURL}">`;
+if(ud.role==='host'||ud.role==='admin')document.getElementById('hostMenuLink').style.display='flex';
+if(ud.role==='admin')document.getElementById('adminMenuLink').style.display='flex';
+}catch(e){}
+await loadFavorites(user.uid);
+await loadDachas();
+});
+</script>
+</body>
+</html>
