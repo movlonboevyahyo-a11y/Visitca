@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>DachaUz — Band qilinganlar</title>
+<meta name="theme-color" content="#1a9e8f">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#1a9e8f;--teal-dark:#157a6e;--teal-light:#e8f7f5;--text:#1a1a2e;--muted:#6b7280;--bg:#f5f7fa;--white:#fff;--border:#e5e7eb}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Nunito',sans-serif;background:var(--bg);padding-bottom:80px}
+.topbar{background:var(--white);padding:16px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:40}
+.page-title{font-size:20px;font-weight:800;color:var(--text)}
+.tabs{display:flex;background:var(--teal-light);border-radius:12px;padding:3px;margin:14px 16px 0}
+.tab{flex:1;padding:9px;text-align:center;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;color:var(--teal);border:none;background:none;font-family:'Nunito',sans-serif;transition:all 0.2s}
+.tab.active{background:var(--teal);color:white}
+.content{padding:16px}
+.booking-card{background:white;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 1px 8px rgba(0,0,0,0.06)}
+.booking-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.booking-img{width:70px;height:70px;border-radius:12px;object-fit:cover;background:#eee;flex-shrink:0}
+.booking-name{font-size:15px;font-weight:800;color:var(--text);margin-bottom:3px}
+.booking-loc{font-size:12px;color:var(--muted)}
+.status-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;margin-top:6px}
+.status-pending{background:#fef3c7;color:#d97706}
+.status-confirmed{background:#d1fae5;color:#059669}
+.status-cancelled{background:#fee2e2;color:#ef4444}
+.booking-dates{display:flex;gap:10px;margin-bottom:10px}
+.date-box{flex:1;background:var(--bg);border-radius:10px;padding:8px;text-align:center}
+.date-lbl{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase}
+.date-val{font-size:13px;font-weight:800;color:var(--text);margin-top:2px}
+.booking-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:10px}
+.booking-amount{font-size:16px;font-weight:800;color:var(--teal)}
+.btn-cancel{background:none;border:1.5px solid #ef4444;color:#ef4444;padding:6px 14px;border-radius:8px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer}
+.empty{text-align:center;padding:60px 24px;color:var(--muted)}
+.empty-icon{font-size:56px;margin-bottom:12px}
+.empty-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:6px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--border);display:flex;z-index:50}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 4px;cursor:pointer;border:none;background:none;font-family:'Nunito',sans-serif;transition:all 0.2s;text-decoration:none;color:var(--muted)}
+.nav-icon{font-size:22px;margin-bottom:3px}
+.nav-label{font-size:10px;font-weight:700}
+.nav-item.active{color:var(--teal)}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="page-title">Band qilinganlar</div></div>
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('active',this)">Joriy buyurtma</button>
+  <button class="tab" onclick="switchTab('history',this)">Tarix</button>
+</div>
+<div class="content" id="bookingContent"></div>
+<nav class="bottom-nav">
+  <a class="nav-item" href="home.html"><span class="nav-icon">🔍</span><span class="nav-label">Qidirish</span></a>
+  <a class="nav-item active" href="bookings.html"><span class="nav-icon">📅</span><span class="nav-label">Band qilinganlar</span></a>
+  <a class="nav-item" href="favorites.html"><span class="nav-icon">❤️</span><span class="nav-label">Sevimlilar</span></a>
+  <a class="nav-item" href="home.html"><span class="nav-icon">👤</span><span class="nav-label">Profil</span></a>
+</nav>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import{getFirestore,collection,query,where,orderBy,getDocs,doc,updateDoc}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyCA5bm4Q-dNYKtcXLunK-lKCKqQn_zQDKw",authDomain:"vorislarlugati.firebaseapp.com",projectId:"vorislarlugati",storageBucket:"vorislarlugati.firebasestorage.app",messagingSenderId:"778909193044",appId:"1:778909193044:web:80c005098b81fbec4a2ec1"});
+const auth=getAuth(app);const db=getFirestore(app);
+let allBookings=[];let currentTab='active';
+function formatDate(d){return new Date(d).toLocaleDateString('uz-UZ',{day:'2-digit',month:'2-digit',year:'numeric'})}
+function formatPrice(p){return Number(p).toLocaleString('uz-UZ')+" so'm"}
+function statusText(s){return{pending:'Kutilmoqda',confirmed:'Tasdiqlangan',cancelled:'Bekor qilindi',completed:'Tugallandi'}[s]||s}
+function render(list){
+const el=document.getElementById('bookingContent');
+const today=new Date().toISOString().split('T')[0];
+const filtered=list.filter(b=>currentTab==='active'?(b.status==='pending'||b.status==='confirmed')&&b.dateTo>=today:(b.status==='completed'||b.status==='cancelled'||b.dateTo<today));
+if(!filtered.length){el.innerHTML=`<div class="empty"><div class="empty-icon">📅</div><div class="empty-title">Bronlar yo'q</div><p>Hali hech narsa band qilmadingiz</p></div>`;return}
+el.innerHTML=filtered.map(b=>`
+<div class="booking-card">
+  <div class="booking-header">
+    <img class="booking-img" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200" alt="">
+    <div>
+      <div class="booking-name">${b.dachaName||'Dacha'}</div>
+      <div class="booking-loc">${b.days} kun • ${b.guests} kishi</div>
+      <span class="status-badge status-${b.status}">${statusText(b.status)}</span>
+    </div>
+  </div>
+  <div class="booking-dates">
+    <div class="date-box"><div class="date-lbl">Kelish</div><div class="date-val">${formatDate(b.dateFrom)}</div></div>
+    <div class="date-box"><div class="date-lbl">Ketish</div><div class="date-val">${formatDate(b.dateTo)}</div></div>
+  </div>
+  <div class="booking-footer">
+    <div><div class="booking-amount">${formatPrice(b.totalAmount)}</div><div style="font-size:12px;color:var(--muted)">${b.days} kunlik bron</div></div>
+    ${b.status==='pending'?`<button class="btn-cancel" onclick="cancelBooking('${b.id}')">Bekor qilish</button>`:''}
+  </div>
+</div>`).join('')}
+window.switchTab=function(tab,el){currentTab=tab;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');render(allBookings)};
+window.cancelBooking=async function(id){if(!confirm('Bronni bekor qilasizmi?'))return;await updateDoc(doc(db,'bookings',id),{status:'cancelled'});allBookings=allBookings.map(b=>b.id===id?{...b,status:'cancelled'}:b);render(allBookings)};
+onAuthStateChanged(auth,async(user)=>{
+if(!user){window.location.href='index.html';return}
+try{const snap=await getDocs(query(collection(db,'bookings'),where('userId','==',user.uid)));allBookings=snap.docs.map(d=>({id:d.id,...d.data()}))}catch(e){allBookings=[]}
+render(allBookings);
+});
+</script>
+</body>
+</html>
