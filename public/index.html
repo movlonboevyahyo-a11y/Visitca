@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>DachaUz — Kirish</title>
+<meta name="theme-color" content="#1a9e8f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#1a9e8f;--teal-dark:#157a6e;--teal-light:#e8f7f5;--text:#1a1a2e;--muted:#6b7280;--bg:#f8fffe;--white:#ffffff;--error:#ef4444;--border:#e5e7eb}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;display:flex;flex-direction:column}
+.hero{background:linear-gradient(160deg,var(--teal) 0%,#0d7a6e 100%);padding:60px 24px 80px;position:relative;overflow:hidden;text-align:center}
+.hero::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.07)}
+.hero::after{content:'';position:absolute;bottom:-60px;left:-30px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.05)}
+.logo{font-family:'Playfair Display',serif;font-size:36px;color:white;font-weight:700;position:relative;z-index:1}
+.logo span{color:#a8f0e8}
+.hero-sub{color:rgba(255,255,255,0.85);font-size:14px;margin-top:6px;position:relative;z-index:1}
+.hero-emoji{font-size:48px;display:block;margin-bottom:12px;position:relative;z-index:1}
+.lang-bar{display:flex;justify-content:center;gap:8px;padding:14px;background:var(--white);border-bottom:1px solid var(--border)}
+.lang-btn{padding:4px 14px;border-radius:20px;border:1.5px solid var(--border);background:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;color:var(--muted)}
+.lang-btn.active{background:var(--teal);border-color:var(--teal);color:white}
+.card{background:var(--white);border-radius:24px 24px 0 0;margin-top:-32px;padding:32px 24px 40px;position:relative;z-index:1;flex:1;box-shadow:0 -4px 20px rgba(0,0,0,0.06)}
+.tabs{display:flex;background:var(--teal-light);border-radius:14px;padding:4px;margin-bottom:28px}
+.tab{flex:1;padding:10px;text-align:center;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.25s;color:var(--teal);border:none;background:none;font-family:'Nunito',sans-serif}
+.tab.active{background:var(--teal);color:white;box-shadow:0 2px 8px rgba(26,158,143,0.3)}
+.form-panel{display:none}
+.form-panel.active{display:flex;flex-direction:column;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:13px;font-weight:700;color:var(--text)}
+.input-wrap{position:relative}
+.input-wrap .icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none}
+.input-wrap input{width:100%;padding:13px 14px 13px 44px;border:1.5px solid var(--border);border-radius:12px;font-family:'Nunito',sans-serif;font-size:15px;color:var(--text);background:var(--bg);transition:all 0.2s;outline:none}
+.input-wrap input:focus{border-color:var(--teal);background:white;box-shadow:0 0 0 3px rgba(26,158,143,0.1)}
+.role-select{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.role-btn{padding:12px 8px;border:1.5px solid var(--border);border-radius:12px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--bg);font-family:'Nunito',sans-serif}
+.role-btn .role-icon{font-size:24px;display:block;margin-bottom:4px}
+.role-btn .role-name{font-size:13px;font-weight:700;color:var(--text)}
+.role-btn.selected{border-color:var(--teal);background:var(--teal-light)}
+.btn-primary{width:100%;padding:15px;background:linear-gradient(135deg,var(--teal),var(--teal-dark));color:white;border:none;border-radius:14px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 16px rgba(26,158,143,0.35);margin-top:4px}
+.btn-primary:hover{transform:translateY(-1px)}
+.btn-primary:active{transform:scale(0.98)}
+.divider{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:13px;margin:4px 0}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.btn-google{width:100%;padding:13px;background:white;color:var(--text);border:1.5px solid var(--border);border-radius:14px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-google:hover{background:var(--bg);border-color:var(--teal)}
+.error-msg{color:var(--error);font-size:13px;font-weight:600;text-align:center;display:none}
+.error-msg.show{display:block}
+.loading{display:none;position:fixed;inset:0;background:rgba(255,255,255,0.85);z-index:100;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+.loading.show{display:flex}
+.spinner{width:44px;height:44px;border:4px solid var(--teal-light);border-top-color:var(--teal);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="loading" id="loading"><div class="spinner"></div><p style="color:var(--teal);font-weight:700" id="loadingText">Kiring...</p></div>
+<div class="lang-bar">
+  <button class="lang-btn active" onclick="setLang('uz')">UZ</button>
+  <button class="lang-btn" onclick="setLang('ru')">RU</button>
+  <button class="lang-btn" onclick="setLang('en')">EN</button>
+</div>
+<div class="hero">
+  <span class="hero-emoji">🏡</span>
+  <div class="logo">Dacha<span>Uz</span></div>
+  <p class="hero-sub" id="heroSub">Eng yaxshi dachalarni ijaralang</p>
+</div>
+<div class="card">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('login')" id="tab-login">Kirish</button>
+    <button class="tab" onclick="switchTab('register')" id="tab-register">Ro'yxatdan o'tish</button>
+  </div>
+  <div class="form-panel active" id="panel-login">
+    <div class="form-group"><label id="lbl-email">Email</label><div class="input-wrap"><span class="icon">📧</span><input type="email" id="login-email" placeholder="email@gmail.com"></div></div>
+    <div class="form-group"><label id="lbl-password">Parol</label><div class="input-wrap"><span class="icon">🔒</span><input type="password" id="login-password" placeholder="••••••••"></div></div>
+    <p class="error-msg" id="login-error"></p>
+    <button class="btn-primary" onclick="login()" id="btn-login">Kirish</button>
+    <div class="divider" id="lbl-or">yoki</div>
+    <button class="btn-google" onclick="googleLogin()"><svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20H24v8h11.3C33.6 33.1 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.5 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.1-2.7-.1-4z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.1 19 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.5 29.3 4 24 4 16.3 4 9.7 8.4 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-1.9 13.5-5l-6.2-5.2C29.5 35.5 26.9 36 24 36c-5.2 0-9.6-2.9-11.3-7.1l-6.5 5C9.6 39.5 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20H24v8h11.3c-.9 2.5-2.6 4.6-4.8 6l6.2 5.2C40.5 35.5 44 30.1 44 24c0-1.3-.1-2.7-.4-4z"/></svg>Google bilan kirish</button>
+  </div>
+  <div class="form-panel" id="panel-register">
+    <div class="form-group"><label id="lbl-name">Ism Familiya</label><div class="input-wrap"><span class="icon">👤</span><input type="text" id="reg-name" placeholder="Dostonbek Sotvoldiyev"></div></div>
+    <div class="form-group"><label id="lbl-phone">Telefon</label><div class="input-wrap"><span class="icon">📞</span><input type="tel" id="reg-phone" placeholder="+998 90 000 00 00"></div></div>
+    <div class="form-group"><label id="lbl-email2">Email</label><div class="input-wrap"><span class="icon">📧</span><input type="email" id="reg-email" placeholder="email@gmail.com"></div></div>
+    <div class="form-group"><label id="lbl-password2">Parol</label><div class="input-wrap"><span class="icon">🔒</span><input type="password" id="reg-password" placeholder="Kamida 6 ta belgi"></div></div>
+    <div class="form-group"><label id="lbl-role">Men...</label>
+      <div class="role-select">
+        <div class="role-btn selected" onclick="selectRole('mijoz',this)"><span class="role-icon">🏖️</span><span class="role-name" id="role-mijoz-txt">Dacha izlayman</span></div>
+        <div class="role-btn" onclick="selectRole('host',this)"><span class="role-icon">🏡</span><span class="role-name" id="role-host-txt">Dacha ijaraga beraman</span></div>
+      </div>
+    </div>
+    <p class="error-msg" id="reg-error"></p>
+    <button class="btn-primary" onclick="register()" id="btn-register">Ro'yxatdan o'tish</button>
+    <div class="divider">yoki</div>
+    <button class="btn-google" onclick="googleLogin()"><svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20H24v8h11.3C33.6 33.1 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.5 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.1-2.7-.1-4z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.1 19 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.5 29.3 4 24 4 16.3 4 9.7 8.4 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-1.9 13.5-5l-6.2-5.2C29.5 35.5 26.9 36 24 36c-5.2 0-9.6-2.9-11.3-7.1l-6.5 5C9.6 39.5 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20H24v8h11.3c-.9 2.5-2.6 4.6-4.8 6l6.2 5.2C40.5 35.5 44 30.1 44 24c0-1.3-.1-2.7-.4-4z"/></svg>Google bilan ro'yxatdan o'tish</button>
+  </div>
+</div>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,updateProfile}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import{getFirestore,doc,setDoc,getDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyCA5bm4Q-dNYKtcXLunK-lKCKqQn_zQDKw",authDomain:"vorislarlugati.firebaseapp.com",projectId:"vorislarlugati",storageBucket:"vorislarlugati.firebasestorage.app",messagingSenderId:"778909193044",appId:"1:778909193044:web:80c005098b81fbec4a2ec1"};
+const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
+const LANGS={uz:{heroSub:"Eng yaxshi dachalarni ijaralang",tabLogin:"Kirish",tabReg:"Ro'yxatdan o'tish",btnLogin:"Kirish",btnReg:"Ro'yxatdan o'tish",errFill:"Barcha maydonlarni to'ldiring",errPass:"Parol kamida 6 ta belgi"},ru:{heroSub:"Арендуйте лучшие дачи",tabLogin:"Войти",tabReg:"Регистрация",btnLogin:"Войти",btnReg:"Зарегистрироваться",errFill:"Заполните все поля",errPass:"Пароль минимум 6 символов"},en:{heroSub:"Rent the best dachas",tabLogin:"Sign In",tabReg:"Sign Up",btnLogin:"Sign In",btnReg:"Create Account",errFill:"Please fill all fields",errPass:"Password must be at least 6 characters"}};
+let currentLang='uz';let selectedRole='mijoz';
+window.setLang=function(l){currentLang=l;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`).classList.add('active');const t=LANGS[l];document.getElementById('heroSub').textContent=t.heroSub;document.getElementById('tab-login').textContent=t.tabLogin;document.getElementById('tab-register').textContent=t.tabReg;document.getElementById('btn-login').textContent=t.btnLogin;document.getElementById('btn-register').textContent=t.btnReg};
+window.switchTab=function(tab){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.form-panel').forEach(p=>p.classList.remove('active'));document.getElementById('tab-'+tab).classList.add('active');document.getElementById('panel-'+tab).classList.add('active')};
+window.selectRole=function(role,el){selectedRole=role;document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('selected'));el.classList.add('selected')};
+function showLoading(msg){document.getElementById('loadingText').textContent=msg||'Yuklanmoqda...';document.getElementById('loading').classList.add('show')}
+function hideLoading(){document.getElementById('loading').classList.remove('show')}
+function showError(id,msg){const el=document.getElementById(id);el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),4000)}
+async function saveUser(user,extra={}){const ref=doc(db,'users',user.uid);const snap=await getDoc(ref);if(!snap.exists()){await setDoc(ref,{uid:user.uid,name:user.displayName||extra.name||'',email:user.email,phone:extra.phone||'',role:extra.role||'mijoz',photoURL:user.photoURL||'',createdAt:serverTimestamp()})}}
+async function redirectUser(user){const snap=await getDoc(doc(db,'users',user.uid));const role=snap.exists()?snap.data().role:'mijoz';if(role==='admin')window.location.href='admin.html';else if(role==='host')window.location.href='host.html';else window.location.href='home.html'}
+window.login=async function(){const email=document.getElementById('login-email').value.trim();const password=document.getElementById('login-password').value;if(!email||!password)return showError('login-error',LANGS[currentLang].errFill);showLoading('Kirilmoqda...');try{const cred=await signInWithEmailAndPassword(auth,email,password);await redirectUser(cred.user)}catch(e){hideLoading();showError('login-error',e.message)}};
+window.register=async function(){const name=document.getElementById('reg-name').value.trim();const phone=document.getElementById('reg-phone').value.trim();const email=document.getElementById('reg-email').value.trim();const password=document.getElementById('reg-password').value;if(!name||!email||!password)return showError('reg-error',LANGS[currentLang].errFill);if(password.length<6)return showError('reg-error',LANGS[currentLang].errPass);showLoading("Ro'yxatdan o'tilmoqda...");try{const cred=await createUserWithEmailAndPassword(auth,email,password);await updateProfile(cred.user,{displayName:name});await saveUser(cred.user,{name,phone,role:selectedRole});await redirectUser(cred.user)}catch(e){hideLoading();showError('reg-error',e.message)}};
+window.googleLogin=async function(){showLoading();try{const provider=new GoogleAuthProvider();const cred=await signInWithPopup(auth,provider);await saveUser(cred.user,{role:selectedRole});await redirectUser(cred.user)}catch(e){hideLoading();showError('login-error',e.message)}};
+onAuthStateChanged(auth,async(user)=>{if(user){showLoading();await redirectUser(user)}});
+</script>
+</body>
+</html>
